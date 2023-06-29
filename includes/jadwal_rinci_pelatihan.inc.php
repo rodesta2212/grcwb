@@ -130,6 +130,7 @@ class JadwalRinciPelatihan {
 		LEFT JOIN {$this->table_pelatihan} C ON A.id_pelatihan=C.id_pelatihan 
 		LEFT JOIN {$this->table_program} D ON A.id_program=D.id_program 
 		WHERE C.tgl_mulai <= CURDATE() AND CURDATE() <= C.tgl_selesai
+		GROUP BY A.id_pelatihan
 		ORDER BY A.id_jadwal_rinci_pelatihan ASC";
 		$stmt = $this->conn->prepare( $query );
 		$stmt->execute();
