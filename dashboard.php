@@ -4,6 +4,7 @@
 <?php
 	include("config.php");
 	include_once('includes/jadwal_rinci_pelatihan.inc.php');
+	include_once('includes/testimoni.inc.php');
 
 	session_start();
 	if (!isset($_SESSION['id_user'])) echo "<script>location.href='login.php'</script>";
@@ -11,6 +12,8 @@
 
 	$JadwalRinciPelatihan = new JadwalRinciPelatihan($db);
 	$JadwalRinciPelatihan->id_peserta = isset($_SESSION['id_peserta']) ? $_SESSION['id_peserta']:'';
+
+	$Testimoni = new Testimoni($db);
 ?>
 
 <!-- header -->
@@ -239,6 +242,110 @@
 
 					</div>
 				</div>
+
+				<div class="page-header">
+					<div class="row">
+						<div class="col-12  mb-20">
+							<div class="title">
+								<h4>Daftar Testimoni Menunggu Konfirmasi :</h4>
+							</div>
+						</div>
+						<?php $i=0; $Testimonis = $Testimoni->readMenungguKorfirmasi(); while ($row = $Testimonis->fetch(PDO::FETCH_ASSOC)) : ?>
+							<div class="col-md-4 mb-20">
+								<div class="card-box d-block mx-auto pd-20 text-secondary">
+									<div class="img pb-30">
+										<img src="upload/<?=$row['gambar_pelatihan']?>" alt="<?=$row['gambar_pelatihan']?>">
+									</div>
+									<div class="content">
+										<h3 class="h4"><?=ucwords($row['nama_pelatihan'])?></h3>
+										<p class="max-width-200">
+											<?php 
+												$date_mulai = strtotime($row['tgl_mulai']);
+												$date_selesai = strtotime($row['tgl_selesai']); 
+											?>
+											<h6>
+												<?=date('d M Y', $date_mulai);?> - <?=date('d M Y', $date_selesai);?>
+											</h6>
+											<br/>
+										</p>
+										<h3 class="h4">Peserta : <?=ucwords($row['nama_peserta'])?></h3>
+										<div style="display: flex; justify-content: center; align-items: center;">
+											<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalStatus<?=$i?>">Testimoni Peserta</button>
+										</div>
+										<!-- Modal Create-->
+										<?php
+											if($_POST){
+												// post data
+												$Testimoni->id_testimoni = $_POST["id_testimoni"];
+												$Testimoni->id_peserta = $_POST["id_peserta"];
+												$Testimoni->id_pelatihan = $_POST["id_pelatihan"];
+												$Testimoni->testimoni = $_POST["testimoni"];
+												$Testimoni->tampil = $_POST["tampil"];
+
+												if($Testimoni->updateTampil()){
+													echo '<script language="javascript">';
+													echo 'alert("Data Berhasil Terkirim")';
+													echo '</script>';
+													echo "<script>location.href='dashboard.php'</script>";
+												} else { 
+													echo '<script language="javascript">';
+													echo 'alert("Data Gagal Terkirim")';
+													echo '</script>';
+												}
+											}
+										?>
+										<div class="modal fade" id="modalStatus<?=$i?>" role="dialog">
+											<div class="modal-dialog">
+												<form method="POST" enctype="multipart/form-data">
+													<!-- Modal content-->
+													<div class="modal-content">
+														<div class="modal-header">
+															<h4 class="modal-title">Tampil Testimoni Peserta</h4>
+															<button type="button" class="close" data-dismiss="modal">&times;</button>
+														</div>
+														<div class="modal-body">
+															<!-- hidden form -->
+															<input type="hidden" name="id_testimoni" value="<?php echo $row['id_testimoni']; ?>">
+															<input type="hidden" name="id_peserta" value="<?php echo $row['id_peserta']; ?>">
+															<input type="hidden" name="id_pelatihan" value="<?php echo $row['id_pelatihan']; ?>">
+															<input type="hidden" name="tampil" value="<?php echo $row['tampil']; ?>">
+															<!-- hidden form -->
+															<div class="form-group row">
+																<label class="col-12 col-form-label">Testimoni</label>
+																<div class="col-12">
+																	<textarea class="form-control" name="testimoni" style="height:200px;" readonly><?php echo $row['testimoni']; ?></textarea>
+																</div>
+															</div>
+															<div class="form-group">
+																<label>Tampil Testimoni ?<span style="color:red;">*</span></label>
+																<select class="form-control" name="tampil" required>
+																	<option selected disabled>Pilih...</option>
+																	<option value="YES">Tampilkan</option>
+																	<option value="NO">Tidak di Tampilkan</option>
+																</select>
+															</div>
+														</div>
+														<div class="modal-footer">
+															<!-- <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button> -->
+															<button type="submit" class="btn btn-success">Konfirmasi</button>
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						<?php $i++; endwhile; ?>
+
+						<?php if ($i == 0): ?>
+							<div class="col-12" style="display: flex; justify-content: center; align-items: center;">
+								<h6>Tidak Ada Testimoni Peserta Yang Harus Di Konfirmasi</h6>
+							</div>
+						<?php endif;?>
+
+					</div>
+				</div>
 			<?php elseif ($_SESSION['role'] == 'peserta'): ?>
 				<div class="page-header">
 					<div class="row">
@@ -409,6 +516,68 @@
 											<div style="display: flex; justify-content: center; align-items: center;">
 												<a href="sertifikat.php?id=<?php echo $_SESSION['id_peserta']; ?>" class="btn btn-success btn-sm">Anda Lulus Pelatihan (Cetak Sertifikat)</a>
 											</div>
+											<?php $no=0; $Testimonis = $Testimoni->readAll(); while ($rowTestimoni = $Testimonis->fetch(PDO::FETCH_ASSOC)) : ?>
+												<?php if($rowTestimoni['id_peserta'] == $row['id_peserta'] && $rowTestimoni['id_pelatihan'] == $row['id_pelatihan']): ?>
+												<?php $no++; endif; ?>
+											<?php endwhile; ?>
+											<?php if($no == 0): ?>
+												<div style="display: flex; justify-content: center; align-items: center; margin-top: 10px;">
+													<button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#modalTestimoni<?=$i?>">Isi Testimoni</button>
+												</div>
+												<!-- Modal Create-->
+												<?php
+													if($_POST){
+														// post data
+														$Testimoni->id_testimoni = $_POST["id_testimoni"];
+														$Testimoni->id_peserta = $_POST["id_peserta"];
+														$Testimoni->id_pelatihan = $_POST["id_pelatihan"];
+														$Testimoni->testimoni = $_POST["testimoni"];
+														$Testimoni->tampil = $_POST["tampil"];
+
+														if ($Testimoni->insert()) {
+															echo '<script language="javascript">';
+															echo 'alert("Data Berhasil Terkirim")';
+															echo '</script>';
+															echo "<script>location.href='dashboard.php'</script>";
+														} else {
+															echo '<script language="javascript">';
+															echo 'alert("Data Gagal Terkirim")';
+															echo '</script>';
+														}
+													}
+												?>
+												<div class="modal fade" id="modalTestimoni<?=$i?>" role="dialog">
+													<div class="modal-dialog">
+														<form method="POST" enctype="multipart/form-data">
+															<!-- Modal content-->
+															<div class="modal-content">
+																<div class="modal-header">
+																	<h4 class="modal-title">Testimoni</h4>
+																	<button type="button" class="close" data-dismiss="modal">&times;</button>
+																</div>
+																<div class="modal-body">
+																	<!-- hidden -->
+																	<input type="hidden" name="id_testimoni" value="<?php echo $Testimoni->getNewId(); ?>">
+																	<input type="hidden" name="id_peserta" value="<?php echo $_SESSION['id_peserta']; ?>">
+																	<input type="hidden" name="id_pelatihan" value="<?php echo $row['id_pelatihan']; ?>">
+																	<input type="hidden" name="tampil" value="NOT SET">
+																	<!-- hidden -->
+																	<div class="form-group row">
+																		<label class="col-12 col-form-label">Isi Testimoni<span style="color:red;">*</span></label>
+																		<div class="col-12">
+																		<textarea class="form-control" name='testimoni' style="height:200px;" required></textarea>
+																		</div>
+																	</div>
+																</div>
+																<div class="modal-footer">
+																	<!-- <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button> -->
+																	<button type="submit" class="btn btn-success">Kirim</button>
+																</div>
+															</div>
+														</form>
+													</div>
+												</div>
+											<?php endif; ?>
 										<?php endif; ?>
 									</div>
 								</div>

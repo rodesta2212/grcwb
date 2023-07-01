@@ -5,10 +5,12 @@
     include("config.php");
     include_once('includes/pelatihan.inc.php');
     include_once('includes/program.inc.php');
+    include_once('includes/testimoni.inc.php');
 
     $config = new Config(); $db = $config->getConnection();
 	$Pelatihan = new Pelatihan($db);
     $Program = new Program($db);
+    $Testimoni = new Testimoni($db);
 ?>
 
 <!-- Basic -->
@@ -193,7 +195,31 @@
         </div>
     </div>
     <!-- end section -->
-    
+
+    <!-- section -->
+    <div class="section layout_padding padding_bottom-0">
+        <div class="container">
+                    <div id="testimonial-slider" class="owl-carousel">
+                        <?php $i=0; $Testimonis = $Testimoni->readIndex(); while ($row = $Testimonis->fetch(PDO::FETCH_ASSOC)) : ?>
+                            <div class="testimonial row">
+                                <div class="col-2">
+                                    <img src="upload/<?=$row['foto']?>" alt="#" style="width:110px; height:110px; border-radius:50%;" />
+                                </div>
+                                <div class="col-10">
+                                <p class="description">
+                                    <?=$row['testimoni']?>
+                                </p>
+                                <h3 class="title"><?=$row['nama_peserta']?></h3>
+                                <small class="post">- <?=$row['nama_pelatihan']?></small>
+                        </div>
+                            </div>
+                        <?php $i++; endwhile; ?>
+                    </div>
+                
+        </div>
+    </div>
+    <!-- end section -->
+
     <!-- footer -->
     <?php include("index-footer.php"); ?>
 
