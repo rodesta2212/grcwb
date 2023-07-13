@@ -127,9 +127,32 @@
 									<td>
                                         <!-- <a class="dropdown-item link-action" href="pelatihan-detail.php?id=<?php echo $row['id_pelatihan']; ?>"><i class="dw dw-eye"></i> Detail</a> |  -->
 										<a class="dropdown-item link-action" href="pelatihan-update.php?id=<?php echo $row['id_pelatihan']; ?>" data-color="#265ed7"><i class="dw dw-edit-1"></i> Update</a> | 
-										<a class="dropdown-item link-action" href="pelatihan-delete.php?id=<?php echo $row['id_pelatihan']; ?>" data-color="#e95959"><i class="dw dw-delete-3"></i> Delete</a>
+										<!-- <a class="dropdown-item link-action" href="pelatihan-delete.php?id=<?php echo $row['id_pelatihan']; ?>" data-color="#e95959"><i class="dw dw-delete-3"></i> Delete</a> -->
+										<a class="dropdown-item link-action" href="#" data-color="#e95959" data-toggle="modal" data-target="#modalDelete<?=$no?>"><i class="dw dw-delete-3"></i> Delete</a>
 									</td>
 								</tr>
+								<!-- Modal -->
+								<div class="modal fade" id="modalDelete<?=$no?>" role="dialog">
+									<div class="modal-dialog">
+										<!-- <form method="POST" enctype="multipart/form-data"> -->
+											<!-- Modal content-->
+											<div class="modal-content">
+												<div class="modal-header">
+													<h4 class="modal-title">Hapus Data</h4>
+													<button type="button" class="close" data-dismiss="modal">&times;</button>
+												</div>
+												<div class="modal-body">
+													<h4>Apa anda yakin ingin menghapus data ?</h4>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-info" data-dismiss="modal">Tidak</button>
+													<a href="pelatihan-delete.php?id=<?php echo $row['id_pelatihan']; ?>" class="btn btn-danger">Ya</a>
+												</div>
+											</div>
+										<!-- </form> -->
+									</div>
+								</div>
+
                                 <?php $no++; endwhile; ?>
 							</tbody>
 						</table>
