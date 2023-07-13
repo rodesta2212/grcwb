@@ -36,7 +36,7 @@
                                         <h4>Courses by Wabi</h4>
                                         <br>
                                         <div class="full center">
-                                            <a class="contact_bt" href="courses.html">Start a Course</a>
+                                            <a class="contact_bt" href="register.php">Start a Course</a>
 										</div>
                                     </div>
                                 </div>
@@ -52,7 +52,7 @@
                                         <h4>Courses by Wabi</h4>
                                         <br>
                                         <div class="full center">
-										    <a class="contact_bt" href="courses.html">Start a Course</a>
+										    <a class="contact_bt" href="register.php">Start a Course</a>
 										</div>
                                     </div>
                                 </div>
@@ -126,7 +126,7 @@
                         </div>
 					  </div>
                 </div>
-                <?php $Pelatihans = $Pelatihan->readActive(); while ($row = $Pelatihans->fetch(PDO::FETCH_ASSOC)) : ?>
+                <?php $Pelatihans = $Pelatihan->readAll(); while ($row = $Pelatihans->fetch(PDO::FETCH_ASSOC)) : ?>
                     <div class="col-md-4">
                         <a href="courses-detail.php?id=<?php echo $row['id_pelatihan']; ?>">
                             <div class="full blog_img_popular">

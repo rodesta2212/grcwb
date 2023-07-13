@@ -26,7 +26,7 @@ class Login {
             $_SESSION['role'] = $user['role'];
             return $user['nama'];
         }else {
-            $user = $this->checkUsers();
+            $user = $this->checkAdmin();
             if ($user) {
                 $this->user = $user;
                 session_start();
@@ -54,7 +54,7 @@ class Login {
         return false;
     }
 
-    protected function checkUsers() {
+    protected function checkAdmin() {
         $stmt = $this->conn->prepare('SELECT * FROM '.$this->table_user.' WHERE username=? AND password=? AND role!="peserta" LIMIT 1');
         $stmt->bindParam(1, $this->username);
         $stmt->bindParam(2, $this->password);
