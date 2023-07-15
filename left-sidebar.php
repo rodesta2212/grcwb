@@ -30,7 +30,12 @@
 						</li>
 						<li>
 							<a href="#" class="dropdown-toggle no-arrow" data-toggle="modal" data-target="#laporanModal">
-								<span class="micon dw dw-analytics1"></span><span class="mtext">Laporan</span>
+								<span class="micon dw dw-analytics1"></span><span class="mtext">Laporan Periode</span>
+							</a>
+						</li>
+						<li>
+							<a href="laporan-peserta.php" class="dropdown-toggle no-arrow">
+								<span class="micon dw dw-analytics-10"></span><span class="mtext">Laporan Peserta</span>
 							</a>
 						</li>
 					<?php else: ?>

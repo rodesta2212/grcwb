@@ -56,15 +56,15 @@
 							</thead>
 							<tbody>
                                 <?php $no=1; $JadwalRinciPelatihans = $JadwalRinciPelatihan->laporan(); while ($row = $JadwalRinciPelatihans->fetch(PDO::FETCH_ASSOC)) : ?>
-								<?php if($row['status_pelatihan'] != 'mendaftar' && $row['status_pembayaran'] != 'menunggu konfirmasi'):?>
-									<tr class="text-center">
-										<td><?=$no?></td>
-										<td><?=ucwords($row['nama_peserta'])?></td>
-										<td><?=ucwords($row['nama_pelatihan'])?></td>
-										<td><?=ucwords($row['nama_program'])?></td>
-										<td><?=ucwords($row['status_pembayaran'])?></td>
-										<td><?=ucwords($row['status_pelatihan'])?></td>
-									</tr>
+									<?php if($row['status_pelatihan'] != 'mendaftar' && $row['status_pembayaran'] != 'menunggu konfirmasi'):?>
+										<tr class="text-center">
+											<td><?=$no?></td>
+											<td><?=ucwords($row['nama_peserta'])?></td>
+											<td><?=ucwords($row['nama_pelatihan'])?></td>
+											<td><?=ucwords($row['nama_program'])?></td>
+											<td><?=ucwords($row['status_pembayaran'])?></td>
+											<td><?=ucwords($row['status_pelatihan'])?></td>
+										</tr>
 									<?php endif ?>
                                 <?php $no++; endwhile; ?>
 							</tbody>

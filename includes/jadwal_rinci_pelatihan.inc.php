@@ -168,6 +168,59 @@ class JadwalRinciPelatihan {
 		return $stmt;
 	}
 
+	function laporanPeserta() {
+		$query = "SELECT A.id_jadwal_rinci_pelatihan, A.status_pelatihan, A.status_pembayaran, A.file_pembayaran,
+		B.id_peserta, B.nama AS nama_peserta, B.tgl_lahir, B.email, B.telp, B.jenis_kelamin, B.alamat, B.foto,
+		C.id_pelatihan, C.nama AS nama_pelatihan, C.deskripsi AS deskripsi_pelatihan, C.tgl_mulai, C.tgl_selesai, C.gambar AS gambar_pelatihan,
+		D.id_program, D.nama AS nama_program, D.deskripsi AS deskripsi_program, D.jam_mulai, D.jam_selesai, D.gambar AS gambar_program, D.biaya, D.senin, D.selasa, D.rabu, D.kamis, D.jumat, D.sabtu, D.minggu
+		FROM {$this->table_jadwal_rinci_pelatihan} A
+		LEFT JOIN {$this->table_peserta} B ON A.id_peserta=B.id_peserta 
+		LEFT JOIN {$this->table_pelatihan} C ON A.id_pelatihan=C.id_pelatihan 
+		LEFT JOIN {$this->table_program} D ON A.id_program=D.id_program 
+		WHERE CURDATE() > C.tgl_selesai
+		ORDER BY A.id_jadwal_rinci_pelatihan ASC";
+		$stmt = $this->conn->prepare($query);
+		$stmt->execute();
+
+		return $stmt;
+	}
+
+	function laporanPesertaSearch() {
+		$query = "SELECT A.id_jadwal_rinci_pelatihan, A.status_pelatihan, A.status_pembayaran, A.file_pembayaran,
+		B.id_peserta, B.nama AS nama_peserta, B.tgl_lahir, B.email, B.telp, B.jenis_kelamin, B.alamat, B.foto,
+		C.id_pelatihan, C.nama AS nama_pelatihan, C.deskripsi AS deskripsi_pelatihan, C.tgl_mulai, C.tgl_selesai, C.gambar AS gambar_pelatihan,
+		D.id_program, D.nama AS nama_program, D.deskripsi AS deskripsi_program, D.jam_mulai, D.jam_selesai, D.gambar AS gambar_program, D.biaya, D.senin, D.selasa, D.rabu, D.kamis, D.jumat, D.sabtu, D.minggu
+		FROM {$this->table_jadwal_rinci_pelatihan} A
+		LEFT JOIN {$this->table_peserta} B ON A.id_peserta=B.id_peserta 
+		LEFT JOIN {$this->table_pelatihan} C ON A.id_pelatihan=C.id_pelatihan 
+		LEFT JOIN {$this->table_program} D ON A.id_program=D.id_program 
+		WHERE CURDATE() > C.tgl_selesai AND :id_pelatihan = C.id_pelatihan
+		ORDER BY A.id_jadwal_rinci_pelatihan ASC";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':id_pelatihan', $this->id_pelatihan);
+		$stmt->execute();
+
+		return $stmt;
+	}
+
+	function pelatihanSelesai() {
+		$query = "SELECT A.id_jadwal_rinci_pelatihan, A.status_pelatihan, A.status_pembayaran, A.file_pembayaran,
+		B.id_peserta, B.nama AS nama_peserta, B.tgl_lahir, B.email, B.telp, B.jenis_kelamin, B.alamat, B.foto,
+		C.id_pelatihan, C.nama AS nama_pelatihan, C.deskripsi AS deskripsi_pelatihan, C.tgl_mulai, C.tgl_selesai, C.gambar AS gambar_pelatihan,
+		D.id_program, D.nama AS nama_program, D.deskripsi AS deskripsi_program, D.jam_mulai, D.jam_selesai, D.gambar AS gambar_program, D.biaya, D.senin, D.selasa, D.rabu, D.kamis, D.jumat, D.sabtu, D.minggu
+		FROM {$this->table_jadwal_rinci_pelatihan} A
+		LEFT JOIN {$this->table_peserta} B ON A.id_peserta=B.id_peserta 
+		LEFT JOIN {$this->table_pelatihan} C ON A.id_pelatihan=C.id_pelatihan 
+		LEFT JOIN {$this->table_program} D ON A.id_program=D.id_program 
+		WHERE CURDATE() > C.tgl_selesai
+		GROUP BY A.id_pelatihan
+		ORDER BY A.id_jadwal_rinci_pelatihan ASC";
+		$stmt = $this->conn->prepare($query);
+		$stmt->execute();
+
+		return $stmt;
+	}
+
 	function update() {
 		$query = "UPDATE {$this->table_jadwal_rinci_pelatihan}
 			SET
